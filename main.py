@@ -10,6 +10,13 @@ pygame.init()
 
 screen = pygame.display.set_mode((800, 600))
 
+
+# changing the Title and icon of the window
+pygame.display.set_caption(" Space Invaders")
+icon = pygame.image.load("spaceship.png")
+pygame.display.set_icon(icon)
+
+
 # we can observe here that the screen disappears quickly. To change that
 # one way is
 
@@ -27,3 +34,7 @@ while is_running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             is_running = 0
+
+    # changing background color using rgb values and have to update to have change in effect
+    screen.fill((185, 198, 221))
+    pygame.display.update()
