@@ -20,6 +20,7 @@ pygame.display.set_icon(icon)
 spaceship_icon = pygame.image.load("space-invaders.png")
 spaceship_static_x = 370
 spaceship_static_y = 500
+playerX_change = 0
 
 
 def player(x, y):
@@ -46,9 +47,20 @@ while is_running:
     screen.fill((185, 198, 221))
 
     for event in pygame.event.get():
+        print(event)
         if event.type == pygame.QUIT:
             is_running = 0
 
-    spaceship_static_x += 0.1
+        # checking whether the keystroke(key pressed ) is right or left arrow key
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                playerX_change = -0.3
+            if event.key == pygame.K_RIGHT:
+                playerX_change = 0.3
+        # if event.type == pygame.KEYUP:
+        #     if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+        #         playerX_change = 0
+
+    spaceship_static_x += playerX_change
     player(spaceship_static_x, spaceship_static_y)
     pygame.display.update()
