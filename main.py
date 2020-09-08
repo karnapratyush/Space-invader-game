@@ -19,13 +19,13 @@ pygame.display.set_icon(icon)
 # setting the spaceship and adding it at certain fixed position on screen
 spaceship_icon = pygame.image.load("space-invaders.png")
 spaceship_static_x = 370
-spaceship_static_y = 480
+spaceship_static_y = 500
 
 
-def player():
+def player(x, y):
     # drawing a image on screen is written below
 
-    screen.blit(spaceship_icon, (spaceship_static_x, spaceship_static_y))
+    screen.blit(spaceship_icon, (x, y))
 
 
 # we can observe here that the screen disappears quickly. To change that
@@ -49,5 +49,6 @@ while is_running:
         if event.type == pygame.QUIT:
             is_running = 0
 
-    player()
+    spaceship_static_x += 0.1
+    player(spaceship_static_x, spaceship_static_y)
     pygame.display.update()
