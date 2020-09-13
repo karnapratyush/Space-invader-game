@@ -19,6 +19,8 @@ pygame.display.set_caption(" Space Invaders")
 icon = pygame.image.load("spaceship.png")
 pygame.display.set_icon(icon)
 
+# setting up background image
+icon = pygame.image.load("spaceship.png")
 # setting the spaceship and adding it at certain fixed position on screen
 spaceship_icon = pygame.image.load("space-invaders.png")
 spaceship_static_x = 370
