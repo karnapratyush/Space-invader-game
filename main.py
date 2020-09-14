@@ -19,6 +19,9 @@ pygame.display.set_caption(" Space Invaders")
 icon = pygame.image.load("spaceship.png")
 pygame.display.set_icon(icon)
 
+# adding bg-image
+bg = pygame.image.load("background_image.png")
+
 # setting the spaceship and adding it at certain fixed position on screen
 spaceship_icon = pygame.image.load("space-invaders.png")
 spaceship_static_x = 370
@@ -27,11 +30,17 @@ playerX_change = 0
 
 
 # adding ememies
-enemy_icon = pygame.image.load("enemy2.png")
+enemy_icon = pygame.image.load("alien.png")
 enemy_x = random.randint(0, 736)
 enemy_y = 0
-enemy_pos_diff_X = 0.3
+enemy_pos_diff_X = 1
 enemy_pos_diff_Y = 0
+
+
+# adding bullet
+bullet_icon = pygame.image.load("bullet32px.png")
+fire = 0
+bullet_Y = spaceship_static_y
 
 
 def player(x, y):
@@ -44,6 +53,15 @@ def player(x, y):
 def enemy(x, y):
 
     screen.blit(enemy_icon, (x, y))
+
+
+# def bullet motion
+def bullet(x, y):
+    global fire
+    fire = 1
+    screen.blit(bullet_icon, (x + 16, y + 10))
+    screen.blit(bullet_icon, (x, y + 10))
+    screen.blit(bullet_icon, (x + 30, y + 10))
 
 
 # we can observe here that the screen disappears quickly. To change that
@@ -62,6 +80,7 @@ while is_running:
 
     # changing background color using rgb values and have to update to have change in effect
     screen.fill((185, 198, 221))
+    screen.blit(bg, (0, 0))
 
     for event in pygame.event.get():
 
@@ -71,9 +90,12 @@ while is_running:
         # checking whether the keystroke(key pressed ) is right or left arrow key
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                playerX_change = -0.3
+                playerX_change = -3
             if event.key == pygame.K_RIGHT:
-                playerX_change = 0.3
+                playerX_change = 3
+            if event.key == pygame.K_SPACE:
+                bullet_X = spaceship_static_x
+                bullet(bullet_X, bullet_Y)
 
         # when the keystroke is over return change to be zero so that static _x donnot change its positon
         if event.type == pygame.KEYUP:
@@ -88,13 +110,16 @@ while is_running:
         spaceship_static_x = 736
 
     if enemy_x >= 736:
-        enemy_pos_diff_X = -0.3
+        enemy_pos_diff_X = -1
         enemy_y += 10
 
     if enemy_x <= 0:
-        enemy_pos_diff_X = 0.3
+        enemy_pos_diff_X = 1
         enemy_y += 10
 
+    if fire == 1:
+        bullet_Y -= 3
+        bullet(bullet_X, bullet_Y)
     enemy_x += enemy_pos_diff_X
     enemy(enemy_x, enemy_y)
     player(spaceship_static_x, spaceship_static_y)

@@ -14,3 +14,5 @@ The aim of this project is to get used to github as well as share my learnings a
 3. **Every event on that screen is caputured by pygame including mouse hovering to keystroke. Used this advantage to move the spaceship from one position to another**
 
 4. **ALways in while loop initialize the screen first, change its color and e=more before using any icons or any other thing. Because if we add icon first and then change the screen we will not be able to see the icons as screen will be on icon. We want icons on screen.**
+
+5. **If we load a background image the motion of spaceship and invaders will become slow. So after adding the bg-image increase the speed.**
