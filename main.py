@@ -41,6 +41,7 @@ enemy_pos_diff_Y = 0
 bullet_icon = pygame.image.load("bullet32px.png")
 fire = 0
 bullet_Y = spaceship_static_y
+bullet_X = spaceship_static_x
 
 
 def player(x, y):
@@ -62,6 +63,20 @@ def bullet(x, y):
     screen.blit(bullet_icon, (x + 16, y + 10))
     screen.blit(bullet_icon, (x, y + 10))
     screen.blit(bullet_icon, (x + 30, y + 10))
+
+
+# checking if collision is happening
+def collision(a_x, a_y, b_x, b_y):
+    if (
+        abs(b_y - a_y) < 96
+        and abs((a_x + 64) - (b_x)) < 96
+        and abs(b_x + 32 - a_x) < 96
+    ):
+        return 1
+    return 0
+
+
+score = 0
 
 
 # we can observe here that the screen disappears quickly. To change that
@@ -93,9 +108,13 @@ while is_running:
                 playerX_change = -3
             if event.key == pygame.K_RIGHT:
                 playerX_change = 3
+
+            # setting up space bar to fire bullet
             if event.key == pygame.K_SPACE:
-                bullet_X = spaceship_static_x
-                bullet(bullet_X, bullet_Y)
+                # if not fired then only change the x-coordinate
+                if fire == 0:
+                    bullet_X = spaceship_static_x
+                    bullet(bullet_X, bullet_Y)
 
         # when the keystroke is over return change to be zero so that static _x donnot change its positon
         if event.type == pygame.KEYUP:
@@ -109,6 +128,7 @@ while is_running:
     if spaceship_static_x >= 736:
         spaceship_static_x = 736
 
+    # if enemy has touch the boundary then will come down
     if enemy_x >= 736:
         enemy_pos_diff_X = -1
         enemy_y += 10
@@ -117,11 +137,27 @@ while is_running:
         enemy_pos_diff_X = 1
         enemy_y += 10
 
+    # if a bullet was fired its y-coordinate should decrease
     if fire == 1:
         bullet_Y -= 3
         bullet(bullet_X, bullet_Y)
+    # if bullet crossed the screen then fire should be set to zero so that next bullet can be fired
+    if bullet_Y <= 0:
+        fire = 0
+        bullet_Y = spaceship_static_y
+
     enemy_x += enemy_pos_diff_X
+    collided = collision(enemy_x, enemy_y, bullet_X, bullet_Y)
+    if collided:
+        bullet_Y = spaceship_static_y
+        fire = 0
+        score += 1
+        print(score)
+        enemy_x = random.randint(0, 736)
+        enemy_y = 0
+
     enemy(enemy_x, enemy_y)
+
     player(spaceship_static_x, spaceship_static_y)
 
     pygame.display.update()
