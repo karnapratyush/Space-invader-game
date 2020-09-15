@@ -1,8 +1,11 @@
 # importing pygame
 import pygame
 
+from pygame import mixer
+
 # importing random so that enemy can appear from anywhere
 import random
+impoort time
 
 
 # initializing the pygame
@@ -83,6 +86,28 @@ def collision(a_x, a_y, b_x, b_y):
 
 
 score = 0
+# adding score on scree
+font = pygame.font.Font("freesansbold.ttf", 32)
+text_x = 10
+text_y = 10
+
+
+def show_score():
+    score_dis = font.render("Score: " + str(score), True, (255, 255, 255))
+    screen.blit(score_dis, (text_x, text_y))
+
+
+# adding songs
+mixer.music.load("bg_sound.mp3")
+mixer.music.play(-1)
+
+
+# game over
+over_font = pygame.font.Font("freesansbold.ttf", 64)
+def game_over():
+    game_over_dis = font.render("GAME OVER " , True, (255, 255, 255))
+    screen.blit(game_over_dis, (200, 250))
+
 
 
 # we can observe here that the screen disappears quickly. To change that
@@ -119,6 +144,8 @@ while is_running:
             if event.key == pygame.K_SPACE:
                 # if not fired then only change the x-coordinate
                 if fire == 0:
+                    # laser_song = mixer.Sound("laser.wav")
+                    # laser_song.play()
                     bullet_X = spaceship_static_x
                     bullet(bullet_X, bullet_Y)
 
@@ -136,6 +163,16 @@ while is_running:
 
     # if enemy has touch the boundary then will come down
     for i in range(number_of_aliens):
+        if enemy_y[i]>200:
+            game_over()
+            for j in range(6):
+                enemy_x[j]=800
+            time.sleep(3)
+            is_running=0
+            break
+
+
+            break
         if enemy_x[i] >= 736:
             enemy_pos_diff_X[i] = -1
             enemy_y[i] += 10
@@ -148,6 +185,9 @@ while is_running:
         enemy(enemy_x[i], enemy_y[i], i)
         collided = collision(enemy_x[i], enemy_y[i], bullet_X, bullet_Y)
         if collided:
+            collision_song = mixer.Sound("explosion.wav")
+            collision_song.play()
+
             bullet_Y = spaceship_static_y
             fire = 0
             score += 1
@@ -165,5 +205,5 @@ while is_running:
         bullet_Y = spaceship_static_y
 
     player(spaceship_static_x, spaceship_static_y)
-
+    show_score()
     pygame.display.update()
