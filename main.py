@@ -5,7 +5,7 @@ from pygame import mixer
 
 # importing random so that enemy can appear from anywhere
 import random
-impoort time
+import time
 
 
 # initializing the pygame
@@ -28,7 +28,7 @@ bg = pygame.image.load("background_image.png")
 # setting the spaceship and adding it at certain fixed position on screen
 spaceship_icon = pygame.image.load("space-invaders.png")
 spaceship_static_x = 370
-spaceship_static_y = 500
+spaceship_static_y = 530
 playerX_change = 0
 
 
@@ -80,6 +80,7 @@ def collision(a_x, a_y, b_x, b_y):
         abs(b_y - a_y) < 96
         and abs((a_x + 64) - (b_x)) < 96
         and abs(b_x + 32 - a_x) < 96
+        and bullet_Y != 530
     ):
         return 1
     return 0
@@ -103,11 +104,12 @@ mixer.music.play(-1)
 
 
 # game over
-over_font = pygame.font.Font("freesansbold.ttf", 64)
-def game_over():
-    game_over_dis = font.render("GAME OVER " , True, (255, 255, 255))
-    screen.blit(game_over_dis, (200, 250))
+over_font = pygame.font.Font("freesansbold.ttf", 128)
 
+
+def game_over():
+    game_over_dis = font.render("GAME OVER ", True, (255, 255, 255))
+    screen.blit(game_over_dis, (200, 250))
 
 
 # we can observe here that the screen disappears quickly. To change that
@@ -120,9 +122,14 @@ def game_over():
 
 # so we will close the windo when someone is clicking on x button
 
-
+j = 0
+a = 0
 is_running = 1
 while is_running:
+    j += 1
+    if j % 1000 == 0:
+        a += 1
+        print(a)
 
     # changing background color using rgb values and have to update to have change in effect
     screen.fill((185, 198, 221))
@@ -163,22 +170,21 @@ while is_running:
 
     # if enemy has touch the boundary then will come down
     for i in range(number_of_aliens):
-        if enemy_y[i]>200:
-            game_over()
-            for j in range(6):
-                enemy_x[j]=800
-            time.sleep(3)
-            is_running=0
-            break
+        if enemy_y[i] > 500:
 
+            for j in range(6):
+                enemy_x[j] = 900
+            game_over()
+            # time.sleep(3)
+            # is_running = 0
 
             break
         if enemy_x[i] >= 736:
-            enemy_pos_diff_X[i] = -1
+            enemy_pos_diff_X[i] = -(1 + a)
             enemy_y[i] += 10
 
         elif enemy_x[i] <= 0:
-            enemy_pos_diff_X[i] = 1
+            enemy_pos_diff_X[i] = 1 + a
             enemy_y[i] += 10
 
         enemy_x[i] += enemy_pos_diff_X[i]
@@ -191,7 +197,7 @@ while is_running:
             bullet_Y = spaceship_static_y
             fire = 0
             score += 1
-            print(score)
+            # print(score)
             enemy_x[i] = random.randint(0, 746)
             enemy_y[i] = random.randint(0, 100)
 
