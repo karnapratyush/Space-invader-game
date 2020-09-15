@@ -29,12 +29,18 @@ spaceship_static_y = 500
 playerX_change = 0
 
 
-# adding ememies
-enemy_icon = pygame.image.load("alien.png")
-enemy_x = random.randint(0, 736)
-enemy_y = 0
-enemy_pos_diff_X = 1
-enemy_pos_diff_Y = 0
+# adding number of ememies
+enemy_icon = []
+enemy_x = random.sample(range(0, 746), 6)
+enemy_y = random.sample(range(0, 100), 6)
+enemy_pos_diff_X = []
+enemy_pos_diff_Y = []
+number_of_aliens = 6
+for i in range(number_of_aliens):
+    enemy_icon.append(pygame.image.load("alien.png"))
+
+    enemy_pos_diff_X.append(1)
+    enemy_pos_diff_Y.append(0)
 
 
 # adding bullet
@@ -51,9 +57,9 @@ def player(x, y):
 
 
 # defing enemy
-def enemy(x, y):
+def enemy(x, y, i):
 
-    screen.blit(enemy_icon, (x, y))
+    screen.blit(enemy_icon[i], (x, y))
 
 
 # def bullet motion
@@ -129,13 +135,25 @@ while is_running:
         spaceship_static_x = 736
 
     # if enemy has touch the boundary then will come down
-    if enemy_x >= 736:
-        enemy_pos_diff_X = -1
-        enemy_y += 10
+    for i in range(number_of_aliens):
+        if enemy_x[i] >= 736:
+            enemy_pos_diff_X[i] = -1
+            enemy_y[i] += 10
 
-    if enemy_x <= 0:
-        enemy_pos_diff_X = 1
-        enemy_y += 10
+        elif enemy_x[i] <= 0:
+            enemy_pos_diff_X[i] = 1
+            enemy_y[i] += 10
+
+        enemy_x[i] += enemy_pos_diff_X[i]
+        enemy(enemy_x[i], enemy_y[i], i)
+        collided = collision(enemy_x[i], enemy_y[i], bullet_X, bullet_Y)
+        if collided:
+            bullet_Y = spaceship_static_y
+            fire = 0
+            score += 1
+            print(score)
+            enemy_x[i] = random.randint(0, 746)
+            enemy_y[i] = random.randint(0, 100)
 
     # if a bullet was fired its y-coordinate should decrease
     if fire == 1:
@@ -145,18 +163,6 @@ while is_running:
     if bullet_Y <= 0:
         fire = 0
         bullet_Y = spaceship_static_y
-
-    enemy_x += enemy_pos_diff_X
-    collided = collision(enemy_x, enemy_y, bullet_X, bullet_Y)
-    if collided:
-        bullet_Y = spaceship_static_y
-        fire = 0
-        score += 1
-        print(score)
-        enemy_x = random.randint(0, 736)
-        enemy_y = 0
-
-    enemy(enemy_x, enemy_y)
 
     player(spaceship_static_x, spaceship_static_y)
 
